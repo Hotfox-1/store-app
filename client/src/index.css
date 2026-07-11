@@ -1,0 +1,57 @@
+@import "tailwindcss";
+body {
+  --bs-body-bg: #fcfcfc;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  max-width: 100%;
+  text-align: center;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+p {
+  margin: 0;
+}
+
+.col {
+  display: flex;
+  flex-direction: column !important;
+}
+
+.row {
+  display: flex;
+  flex-direction: row !important;
+}
+
+.heading-card {
+  border: none !important;
+}
+
+* {
+  font-family: "Smooch Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1.1rem;
+}
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+  font-family: "Press Start 2P", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+  padding-top: 1.5rem;
+}

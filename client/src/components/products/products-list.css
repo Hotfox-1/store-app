@@ -1,0 +1,9 @@
+.product-list-name {
+    font-size: 1rem !important;
+    justify-self: start !important;
+    width: auto !important;
+    margin-bottom: 1rem;
+}
+.product-row {
+    gap: 1rem;
+}
