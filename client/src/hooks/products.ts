@@ -13,8 +13,8 @@ export interface CreateProductInput {
 
 const API_BASE_URL = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env?.VITE_API_URL ?? 'http://localhost:8080'
 
-// Tanstack doesn't stop you from using fetch. 
-// Instead it makes it cleaner by not forcing you to use long .then chains for the same functionality.
+// --- Get hooks ---
+// TODO: Move function to a request file.
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: {
@@ -32,9 +32,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return response.json() as Promise<T>
 }
 
-// hooks must be called at top level and in react functions.
 export const useProducts = () =>
-  // useQuery- fetch, cache, and sync server state in asynchronous operations
   useQuery<ApiProduct[]>({
     // identifies query
     queryKey: ['products'],
@@ -48,7 +46,6 @@ export const useProduct = (productId?: string) =>
       if (!productId) {
         throw new Error('Product id is required')
       }
-
       return request<ApiProduct>(`/products/${productId}`)
     },
     enabled: Boolean(productId),
@@ -67,10 +64,27 @@ export const useProductImages = (productId?: string) =>
     enabled: Boolean(productId),
   })
 
+
+export const useProductSections = () => 
+    useQuery<ProductSection[]>({
+        queryKey: ['sections'],
+        queryFn: () => request<ProductSection[]>('/sections'),
+    });
+
+
+export const useFeaturedProducts = () => {
+    useQuery<ApiProduct[]>({
+        queryKey: ['featured'],
+        queryFn: () => request<ApiProduct[]>('/products/featured'),
+    });
+}
+
+// --- Mutation hooks ---
+
 export const useCreateProduct = () => {
   const queryClient = useQueryClient()
 
-  // create/update/delete operations
+  // TODO: move fetch to a request file.
   return useMutation({
     mutationFn: (input: FormData) =>
       fetch(`${API_BASE_URL}/products`, {
@@ -95,6 +109,7 @@ export const useDeleteProduct = () => {
 
   return useMutation({
     mutationFn: (productId: string) =>
+    // TODO: move fetch to a request file.
       fetch(`${API_BASE_URL}/products/${productId}`, {
         method: 'DELETE',
       }).then(async (response) => {
@@ -109,18 +124,4 @@ export const useDeleteProduct = () => {
       queryClient.invalidateQueries({ queryKey: ['products'] })
     },
   })
-}
-
-export const useProductSections = () => {
-    useQuery<ProductSection[]>({
-        queryKey: ['sections'],
-        queryFn: () => request<ProductSection[]>('/sections'),
-    });
-}
-
-export const useFeaturedProducts = () => {
-    useQuery<ApiProduct[]>({
-        queryKey: ['featured'],
-        queryFn: () => request<ApiProduct[]>('/products/featured'),
-    });
 }
